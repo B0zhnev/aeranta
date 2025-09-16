@@ -1,0 +1,9 @@
+Dear, {{ user.username }}. You have {{ notifications|length }} new notifications!
+
+{% for n in notifications %}
+- {{ n.sender }}: {{ n.message }}
+  {{ n.local_time }} {{ n.local_date }}
+{% endfor %}
+
+Have a good day!
+aeranta

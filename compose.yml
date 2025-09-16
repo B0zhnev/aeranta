@@ -1,0 +1,123 @@
+
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx-server
+    restart: always
+    networks:
+      - dbnet
+    expose:
+      - 8088
+    ports:
+      - "80:8088"
+      - "443:443"
+    volumes:
+      - ./aeranta/staticfiles:/app/www/aeranta/static  
+      - ./aeranta/media:/app/www/aeranta/media  
+      - ./aeranta/logs:/app/www/aeranta/logs  
+      - ./nginx:/etc/nginx/conf.d
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+
+    depends_on:
+      - aeranta
+
+  aeranta:
+    build: ./aeranta
+    image: aeranta
+    container_name: aeranta
+    restart: always
+    command: "gunicorn -c gunicorn.py aeranta.wsgi"
+    env_file:
+      - .env
+    links:
+      - 'postgres:dbps'
+    networks:
+      - dbnet
+    volumes:
+      - ./aeranta:/app/www/aeranta
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+
+  celery_worker:
+    build: ./aeranta
+    image: aeranta
+    container_name: celery_worker
+    restart: always
+    command: celery -A aeranta worker -l info
+    env_file:
+      - .env
+    volumes:
+      - ./aeranta:/app/www/aeranta
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - dbnet
+
+  celery_beat:
+    build: ./aeranta
+    image: aeranta
+    container_name: celery_beat
+    restart: always
+    command: celery -A aeranta beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    env_file:
+      - .env
+    volumes:
+      - ./aeranta:/app/www/aeranta
+    depends_on:
+      - redis
+      - postgres
+      - aeranta
+    networks:
+      - dbnet
+
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+    networks:
+      - dbnet  
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    ports:
+      - "8080:8080"
+    links:
+      - "postgres:db"
+    networks:
+      - dbnet
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgis/postgis:17-3.5
+    container_name: psgr 
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    networks:
+      - dbnet
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    command: certonly --webroot --webroot-path=/var/www/certbot/ --email bozhnev.work@gmail.com --agree-tos --no-eff-email -d aeranta.net
+    depends_on:
+      - nginx
+
+networks:
+  dbnet:
+    driver: bridge
+
+volumes:
+  postgres-data:

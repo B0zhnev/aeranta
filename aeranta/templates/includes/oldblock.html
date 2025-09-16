@@ -1,0 +1,12 @@
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+{% endblock %}
+<div id="{{ map_id|default:'map' }}" class="{{ map_class|default:'' }}" style="{{ map_style|default:'' }}" data-get-url="{% url 'weather_at_point' %}"></div>
+<div id="result"></div>
+<div id="preview"></div>
+<div class="card-body">
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="{% static 'js/map_click.js' %}"></script>
+
+</div>

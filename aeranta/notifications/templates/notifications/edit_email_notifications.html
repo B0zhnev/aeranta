@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block title %}Email Notifications | Aeranta{% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="max-width: 640px;">
+  <div class="p-4 rounded shadow-sm" style="background-color: #f8f9fa; border-radius: 12px;">
+    <h4 class="mb-4 text-center">Email Notifications</h4>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} mt-2">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      <!-- Readonly email -->
+      <div class="mb-3">
+        <label class="form-label">Email address</label>
+        <input type="email"
+               name="{{ form.email.name }}"
+               value="{{ form.email.value|default:user.email }}"
+               readonly
+               class="form-control"
+               aria-describedby="emailHelp"
+               style="background-color: #f1f3f5; color: #6c757d;">
+        {% if form.email.errors %}
+          <div class="text-danger small mt-1">
+            {% for err in form.email.errors %}{{ err }}{% endfor %}
+          </div>
+        {% endif %}
+        <div id="emailHelp" class="form-text text-muted">Your account email</div>
+      </div>
+
+
+      <div class="mb-3">
+        <label class="form-label">Notification time</label>
+
+        {% comment %}
+          Determine current selection: prefer bound value, else initial
+        {% endcomment %}
+        {% with selected=local_email_hour %}
+          <div class="row g-2 align-items-center">
+            <div class="col-9 col-sm-8">
+              <select name="{{ form.email_nots.name }}" class="form-select" aria-label="Notification hour">
+                {% for val,label in form.email_nots.field.choices %}
+                  {% with val_str=val|stringformat:"s" sel_str=selected|stringformat:"s" %}
+                    <option value="{{ val }}" {% if sel_str == val_str %}selected{% endif %}>{{ label }}</option>
+                  {% endwith %}
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="col-3 col-sm-4">
+              <div class="text-end">
+                {# Show currently selected label as a compact badge #}
+                {% for val,label in form.email_nots.field.choices %}
+                  {% with val_str=val|stringformat:"s" sel_str=selected|stringformat:"s" %}
+                    {% if sel_str == val_str %}
+                      <span class="badge bg-light text-dark border" style="padding:.45rem .6rem;">
+                        {{ label }}
+                      </span>
+                    {% endif %}
+                  {% endwith %}
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+
+          {% if form.email_nots.errors %}
+            <div class="text-danger small mt-2">
+              {% for err in form.email_nots.errors %}{{ err }}{% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
+        <div class="form-text text-muted mt-2">
+          Choose the hour when you prefer to receive daily email notifications — or select "Notifications off".
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="d-flex justify-content-between mt-4">
+        <a href="{% url 'notifications:list' %}" class="btn btn-outline-secondary" style="border-radius:0.5rem;">Back</a>
+        <button type="submit" class="btn btn-secondary" style="border-radius:0.5rem;">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Thank you for registering{% endblock %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 600px;">
+  <div class="p-4 rounded shadow-sm" style="background-color: #f8f9fa; border-radius: 0.5rem;">
+
+    {% if user.email_confirmed %}
+    <h4 class="mb-4 text-center">Thank you!</h4>
+      <p>Your email has been confirmed. All Aeranta features are now available.</p>
+    {% else %}
+    <h4 class="mb-4 text-center">Attention!</h4>
+      <p>Your email is not confirmed. Email notifications and password reset functions are limited.</p>
+    {% endif %}
+
+    <div class="d-grid gap-2 mt-4">
+      {% if not user.email_confirmed %}
+        <a href="{% url 'users:confirm_email_prompt' %}" class="btn btn-secondary" style="border-radius: 0.5rem;">Confirm Email</a>
+        <a href="{% url 'home' %}" class="btn btn-light" style="margin:auto 10rem auto 10rem">Home</a>
+      {% else %}
+      <a href="{% url 'home' %}" class="btn btn-secondary btn-lg" style="margin:auto 10rem auto 10rem">Home</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

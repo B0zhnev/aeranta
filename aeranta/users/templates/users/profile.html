@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+  {% if user.location %}
+    {% include 'includes/map_block.html' with map_style='height:200px'%}
+    <script>
+      const map = mapInit('map', {{user.location.y}}, {{user.location.x}}, 15);
+      const picker = attachClickPick(map, { result: '#preview' , showChangeButton: true });
+      picker.placeMarker({{ user.location.y }}, {{ user.location.x }}, true);
+    </script>
+  {% else %}
+    <p class="text-muted">Location not set.</p>
+  {% endif %}
+
+  <div class="row">
+    <!-- Current Weather -->
+    <div class="col-md-6 mb-4">
+      {% if current_weather %}
+      <div class="card mt-3">
+        <div class="card-body">
+          <h4>Current weather in {{ current_weather.city }}</h4>
+          <img src="https://openweathermap.org/img/wn/{{ current_weather.icon }}@2x.png" alt="Weather icon">
+          <h5 class="card-title">{{ current_weather.temp }}°C (feels like {{ current_weather.feels_like }}°C)</h5>
+          <h6 class="card-title">{{ current_weather.description|capfirst }}</h6>
+          <hr>
+          <p><strong>Max/Min temperature:</strong> {{ current_weather.temp_max }}°C/{{ current_weather.temp_min }}°C </p>
+          <p><strong>Temperature kf:</strong> {{ current_weather.temp_kf }}</p>
+          <p><strong>Clouds:</strong> {{ current_weather.clouds }}%</p>
+          <p><strong>Humidity:</strong> {{ current_weather.humidity }}%</p>
+          {% if current_weather.visibility %}
+          <p><strong>Visibility:</strong> {{ current_weather.visibility }} m</p>
+          {% endif %}
+          <p><strong>Pressure (sl):</strong> {{ current_weather.sea_level }} hPa</p>
+          <p><strong>Pressure (gl):</strong> {{ current_weather.grnd_level }} hPa</p>
+          <p><strong>Wind:</strong> speed: {{ current_weather.wind }} m/s |
+            deg: {{ current_weather.wind_deg }}° | gusts: {{ current_weather.gust }} m/s</p>
+          {% if current_weather.rain %}
+            <p><strong>Rain:</strong> {{ current_weather.rain }} mm</p>
+            <p><strong>Duration of rain:</strong> {{ current_weather.rain_time }} h</p>
+          {% endif %}
+          <p><strong>Sunrise:</strong> {{ current_weather.sunrise_local }} </p>
+          <p><strong>Sunset:</strong> {{ current_weather.sunset_local }} </p>
+
+          {% if cosmic_data %}
+            <hr>
+            <p class="text-muted"> Space weather </p>
+            <p><strong>Current Kp index:</strong> {{ cosmic_data.kp }}</p>
+            {% if cosmic_data.kp != cosmic_data.kp1hour %}
+              <p><strong>Kp index 1h forecast:</strong> {{ cosmic_data.kp1hour }}</p>
+              <p><strong>Kp index 4h forecast:</strong> {{ cosmic_data.kp4hour }}</p>
+            {% endif %}
+            <p><strong>Interplanetary magnetic field (bz):</strong> {{ cosmic_data.bz }} nT</p>
+            <p><strong>Solar wind density:</strong> {{ cosmic_data.density }} p/cm³</p>
+            <p><strong>Solar wind speed:</strong> {{ cosmic_data.sw_speed }} km/s</p>
+            <p><strong>Local aurora visibility:</strong> {{ cosmic_data.probability }}</p>
+          {% endif %}
+
+          {% if moon_data %}
+            <hr>
+            <p class="text-muted"> Lunar conditions </p>
+            <canvas id="moonCanvas" width="80" height="80"></canvas>
+            <script src="{% static 'js/moon_phase.js' %}"></script>
+            <script>
+              document.addEventListener('DOMContentLoaded', () => {
+                  const canvas = document.getElementById('moonCanvas');
+                  const moonData = {
+                      moon_illumination_percentage: {{ moon_data.moon_illumination_percentage|default:50 }},
+                      moon_phase: "{{ moon_data.moon_phase|default:'' }}",
+                      moon_parallactic_angle: {{ moon_data.moon_parallactic_angle|default:0 }}
+                  };
+                  renderMoon(canvas, moonData);
+              });
+            </script>
+            <p></p>
+            <p><strong>Phase:</strong> {{ moon_data.front_phase }}</p>
+            <p><strong>Illumination:</strong> {{ moon_data.moon_illumination_percentage }}% </p>
+            <p><strong>Moonrise:</strong> {{ moon_data.moonrise }} </p>
+            <p><strong>Moonset:</strong> {{ moon_data.moonset }} </p>
+            <p><strong>Azimuth:</strong> {{ moon_data.moon_azimuth }}° </p>
+            <p><strong>Altitude:</strong> {{ moon_data.moon_altitude }}° </p>
+            <p><strong>Distance:</strong> {{ moon_data.moon_distance }} km</p>
+            <p><strong>Phase angle:</strong> {{ moon_data.moon_angle }}° </p>
+            <p><strong>Parallactic angle:</strong> {{ moon_data.moon_parallactic_angle }}° </p>
+          {% endif %}
+
+          <hr>
+          <h6>{{ current_weather.local_time }} {{ current_weather.local_date }}</h6>
+        </div>
+      </div>
+      {% else %}
+        <p class="text-muted">weather data is not available.</p>
+      {% endif %}
+    </div>
+
+    <!-- Forecast -->
+    <div class="col-md-6" id="forecast-container">
+      {% include 'includes/forecast_block.html' %}
+    </div>
+  </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('forecast-container');
+
+    container.addEventListener('click', (e) => {
+        if (e.target.classList.contains('forecast-page-link')) {
+            e.preventDefault();
+            const url = e.target.getAttribute('href');
+
+            fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                .then(res => res.json())
+                .then(data => {
+                    container.innerHTML = data.html;
+                });
+        }
+    });
+});
+</script>
+{% endblock %}

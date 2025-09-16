@@ -1,0 +1,46 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Moon Phase Test</title>
+    <script src="{% static 'js/moon_phase.js' %}"></script>
+</head>
+<body>
+    <h2>Moon Phase Demo</h2>
+    <div style="display: flex; gap: 20px;">
+        <canvas id="moon0" width="80" height="80"></canvas>
+        <canvas id="moon1" width="80" height="80"></canvas>
+        <canvas id="moon2" width="80" height="80"></canvas>
+        <canvas id="moon3" width="80" height="80"></canvas>
+        <canvas id="moon4" width="80" height="80"></canvas>
+        <canvas id="moon5" width="80" height="80"></canvas>
+        <canvas id="moon6" width="80" height="80"></canvas>
+        <canvas id="moon7" width="80" height="80"></canvas>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const phases = [
+                { name: 'NEW', illum: 0 },
+                { name: 'WAXING_CRESCENT', illum: 0.25 },
+                { name: 'FIRST_QUARTER', illum: 0.56 },
+                { name: 'WAXING_GIBBOUS', illum: 0.75 },
+                { name: 'FULL', illum: 1 },
+                { name: 'WANING_GIBBOUS', illum: 0.75 },
+                { name: 'LAST_QUARTER', illum: 0.46},
+                { name: 'WANING_CRESCENT', illum: 0.25 },
+            ];
+
+            phases.forEach((phase, i) => {
+                const canvas = document.getElementById('moon' + i);
+                renderMoon(canvas, {
+                    moon_illumination_percentage: phase.illum * 100,
+                    moon_phase: phase.name,
+                });
+            });
+        });
+    </script>
+</body>
+</html>

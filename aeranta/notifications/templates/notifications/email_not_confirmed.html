@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Email Not Confirmed | Aeranta{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm p-4" style="border-radius: 15px;">
+        <h4 class="mb-3">Email not confirmed</h4>
+        <p class="mb-4">Unfortunately, the email address of your account has not been confirmed yet.</p>
+        <div class="d-flex gap-2">
+            <a href="{% url 'users:confirm_email_prompt' %}" class="btn btn-secondary">Confirm Email</a>
+            <a href="{% url 'notifications:list' %}" class="btn btn-outline-secondary">Back</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

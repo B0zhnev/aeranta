@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Aeranta{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center mt-3 mb-3" style="max-width:400px; margin: 0 auto;">
+  <div class="input-group">
+    <input type="text" id="city-search" class="form-control" placeholder="Enter city name">
+    <button id="city-search-btn" type="button" class="btn btn-outline-secondary" style="padding: 0 0.5rem;">
+      🔍
+    </button>
+  </div>
+</div>
+
+{% include 'includes/map_block.html' with map_style='height:500px' %}
+
+<div id="preview" class="mt-2 px-2"></div>
+<div id="result" class="mt-3"></div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const mapDiv = document.getElementById('map');
+  const map = mapInit('map', 51.0, 10.0, 3);
+
+  // Forecast и pick
+  const picker = attachClickPick(map, { result: '#preview' });
+  attachClickForecast(map, { endpoint: mapDiv.dataset.getUrl, result: '#result' });
+
+  // Сохраняем глобально, чтобы использовать в placeCityByName
+  window.mapInstance = map;
+  window.cityPicker = picker;
+
+  // ------------------- Поиск города -------------------
+  const input = document.getElementById('city-search');
+  const btn = document.getElementById('city-search-btn');
+
+  async function findCity() {
+    const cityName = input.value.trim();
+    if (!cityName) return;
+
+    // Используем готовую функцию из map_click.js
+    await placeCityByName(cityName, map, picker);
+
+    // Получаем последнюю выбранную точку и рендерим прогноз
+    const picked = picker.getLastPicked ? picker.getLastPicked() : null;
+    if (picked) {
+      // Симулируем клик по карте для рендера прогноза
+      const evt = { coordinate: ol.proj.fromLonLat([picked.lon, picked.lat]) };
+      map.dispatchEvent({ type: 'singleclick', coordinate: evt.coordinate });
+    }
+  }
+
+  btn.addEventListener('click', findCity);
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      findCity();
+    }
+  });
+});
+</script>
+{% endblock %}

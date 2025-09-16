@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}Registration{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} mt-3">{{ message }}</div>
+  {% endfor %}
+{% endif %}
+
+<div class="container mt-5" style="max-width: 400px;">
+
+  <form method="post" class="p-4 rounded shadow-sm" style="background-color: #f8f9fa;">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next }}" />
+
+    <div class="form-error mb-3">{{ form.non_field_errors }}</div>
+    <h5 class="mb-4 text-center">Registration</h5>
+    {% for field in form %}
+      {% if field.is_hidden %}
+        {{ field }}
+      {% else %}
+        <div class="mb-3">
+          <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field|add_class:"form-control" }}
+          {% if field.help_text %}
+            <small class="form-text text-muted">{{ field.help_text }}</small>
+          {% endif %}
+          {% for error in field.errors %}
+            <div class="text-danger small">{{ error }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endfor %}
+    Location
+
+    <!-- Поиск города -->
+     <div class="d-flex justify-content-center mt-3 mb-3" style="max-width:400px; margin: 0 auto;">
+        <div class="input-group">
+      <input type="text" id="id_city" class="form-control pe-5" placeholder="find location">
+      <button id="btn-find" type="button" class="btn btn-outline-secondary" style="padding: 0 0.5rem; cursor:pointer;">🔍</button>
+    </div>
+         </div>
+
+    <!-- Карта -->
+    {% include 'includes/map_block.html' with map_style='height:300px; width:100%;' %}
+    <div id="preview" class="mt-2 px-2"></div>
+
+    <button type="submit" class="btn btn-secondary w-100 mt-3">Submit</button>
+  </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  if (typeof mapInit !== 'function' || typeof attachClickPick !== 'function') return;
+
+  // Инициализация карты и маркера
+  const map = mapInit('map', 60.1699, 24.9384, 5);
+  const picker = attachClickPick(map, { result: '#preview', single: true });
+
+  // Функция обновления координат полей
+  const updateLatLon = (lat, lon) => {
+    const latEl = document.querySelector('#id_latitude');
+    const lonEl = document.querySelector('#id_longitude');
+    if (latEl) latEl.value = lat.toFixed(6);
+    if (lonEl) lonEl.value = lon.toFixed(6);
+  };
+
+  // Обновление после клика по карте
+  map.on && map.on('singleclick', () => {
+    const p = picker.getLastPicked && picker.getLastPicked();
+    if (p) updateLatLon(p.lat, p.lon);
+  });
+
+  // Поиск города
+  const cityInput = document.querySelector('#id_city');
+  const findBtn = document.querySelector('#btn-find');
+
+  const updateCity = () => {
+    const cityName = cityInput.value.trim();
+    if (cityName && typeof placeCityByName === 'function') {
+      placeCityByName(cityName, map, picker);
+      const p = picker.getLastPicked && picker.getLastPicked();
+      if (p) updateLatLon(p.lat, p.lon);
+    }
+  };
+
+  findBtn.addEventListener('click', updateCity);
+  cityInput.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); updateCity(); } });
+});
+</script>
+{% endblock %}

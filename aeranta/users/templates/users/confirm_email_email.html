@@ -1,0 +1,21 @@
+{% autoescape off %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Confirm Your Email</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height:1.5;">
+  <p>Hi {{ user.get_username }},</p>
+  <p>Thank you for registering on Aeranta. Click the button below to confirm your email address:</p>
+  <p>
+    <a href="{{ protocol }}://{{ domain }}{% url 'users:confirm_email_token' token=token %}"
+       style="display:inline-block;padding:10px 20px;background:#007bff;color:#fff;text-decoration:none;border-radius:4px;">
+       Confirm Email
+    </a>
+  </p>
+  <p>If you didn’t register, just ignore this message.</p>
+  <p>Thanks,<br/>The Aeranta Team</p>
+</body>
+</html>
+{% endautoescape %}

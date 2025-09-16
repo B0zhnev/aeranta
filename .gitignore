@@ -1,0 +1,40 @@
+# Env
+.env
+
+# Venv
+/.venv
+.venv
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Logs
+*.log
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info
+
+# Database
+data.json
+dump.rdb
+*.sql
+*.sqlite3
+
+# Celery
+celerybeat-schedule
+celerybeat-schedule.db
+
+# Certificates
+certbot/
+certbot/conf
+certbot/www
+*.pem
+*.key
+
+# Docker
+docker-compose.override.yml
+.docker/

@@ -1,0 +1,107 @@
+.subscription-card {
+  position: relative;
+  border-radius: 0.5rem;
+  padding: 1rem 1.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  color: #fff;
+  background-color: black;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  min-height: 100px;
+}
+
+/* Блок с фотографией слева */
+.subscription-card .background-photo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;          /* высота карточки */
+  width: auto;
+  min-width: 350px;      /* фиксированная минимальная ширина */
+  background-position: left center;
+  background-repeat: no-repeat;
+  background-size: auto 100%;  /* высота 100%, ширина пропорциональна */
+  border-radius: 0.5rem 0 0 0.5rem;
+  z-index: 0;
+}
+
+/* Градиент поверх фото */
+.subscription-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  min-width: 300px;
+  padding-left: 400px;
+  background: linear-gradient(80deg, rgba(0,0,0,0.1) 150px,  rgba(0,0,0,0.2) 160px, rgba(0,0,0,0.8) 200px, rgba(0,0,0,1) 220px);
+  z-index: 1;
+}
+
+/* Контент поверх градиента */
+.subscription-card > .info {
+  position: relative;
+  z-index: 2;
+  flex-grow: 1;
+  margin-right: 1rem;
+  padding-left: 210px; /* отступ под ширину фото */
+  overflow-wrap: anywhere;
+}
+
+/* Форма с кнопкой */
+.subscription-card > form {
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+/* Заголовок */
+.subscription-card .info h5 {
+  margin: 0 0 0.25rem 0;
+  font-weight: 600;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+}
+
+/* Описание */
+.subscription-card .info p {
+  margin: 0;
+  font-size: 0.9rem;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+}
+
+/* Кнопки */
+.subscription-card button {
+  width: 150px;
+  padding: 0.4rem 1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 0.375rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Кнопка подписаться — темная */
+.subscription-card button.subscribe {
+  background-color: #222;
+  color: #eee;
+  border: 2px solid #444;
+}
+.subscription-card button.subscribe:hover {
+  background-color: #555;
+  color: #fff;
+  border-color: #555;
+}
+
+/* Кнопка отписаться — светло-серая с голубым */
+.subscription-card button.unsubscribe {
+  background-color: #b0c7d1;
+  color: #222;
+  border: 2px solid #8aa3b8;
+}
+.subscription-card button.unsubscribe:hover {
+  background-color: #99b0c5;
+  color: #111;
+  border-color: #708ca1;
+}
+

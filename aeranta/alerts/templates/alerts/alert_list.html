@@ -1,0 +1,39 @@
+{% extends 'base.html'%}
+{% load static %}
+
+{% block extra_css %}
+
+<link rel="stylesheet" href="{% static 'css/alerts.css' %}">
+
+{% endblock %}
+
+{% block title %}Alerts{% endblock %}
+
+
+{% block content %}
+
+{% for alert in alerts %}
+{% if alert.is_published %}
+  <div class="subscription-card">
+    {% if alert.image %}
+    <div class="background-photo" style="background-image: url('{{ alert.image.url }}');"></div>
+    {% endif %}
+    <div class="info">
+      <h5>{{ alert.name }}</h5>
+      <p>{{ alert.description }}</p>
+    </div>
+
+    <form method="post" action="{% url 'alerts:toggle' alert.slug %}">
+      {% csrf_token %}
+      {% if user in alert.users.all %}
+        <button type="submit" class="unsubscribe">Unsubscribe</button>
+      {% else %}
+        <button type="submit" class="subscribe">Subscribe</button>
+      {% endif %}
+    </form>
+  </div>
+{% endif %}
+{% empty %}
+  <p>Нет доступных подписок</p>
+{% endfor %}
+{% endblock %}

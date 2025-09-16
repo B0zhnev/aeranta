@@ -1,0 +1,39 @@
+<div id="forecast">
+  {% if page_obj %}
+  <div class="card mt-3">
+    <div class="card-body">
+      <h4>Forecast</h4>
+      <ul>
+        {% for f in page_obj %}
+        <li>{{ f.local_time }} ({{ f.local_date }}) -
+          {{ f.description }}
+          <img src="https://openweathermap.org/img/wn/{{ f.icon }}@2x.png" width="50" height="50" alt="Weather icon">
+          <p> {{ f.temp }}°C |
+          Wind: {{ f.wind_speed }} m/s, {{ f.wind_deg }}° |
+          {% if f.rain %}
+          Rain: {{ f.rain }} mm |
+          {% endif %}
+          Prec.: {{ f.popr }}%
+          <hr>
+        </li>
+        {% endfor %}
+      </ul>
+      <div class="pagination">
+  {% if page_obj.has_previous %}
+      <a href="{% url 'users:forecast_block' %}?page={{ page_obj.previous_page_number }}"
+         class="forecast-page-link btn btn-secondary btn-sm me-2">« prev</a>
+  {% endif %}
+
+  <span> Day {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} </span>
+
+  {% if page_obj.has_next %}
+      <a href="{% url 'users:forecast_block' %}?page={{ page_obj.next_page_number }}"
+         class="forecast-page-link btn btn-secondary btn-sm ms-2">next »</a>
+  {% endif %}
+</div>
+    </div>
+  </div>
+  {% else %}
+    <p class="text-muted">forecast data is not available.</p>
+  {% endif %}
+</div>

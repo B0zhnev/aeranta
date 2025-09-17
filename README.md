@@ -37,7 +37,10 @@ Explore Aeranta online:
 
 
 ```markdown
-![Map view](screenshots/map_placeholder.png)
-![Profile view](screenshots/profile_placeholder.png)
-![In-App Notifications](screenshots/notifications_placeholder.png)
-![Email Notifications](screenshots/email_notifications_placeholder.png)
+![Map view](screenshots/map.png)
+![Home Page view](screenshots/homepage.png)
+![Profile view](screenshots/profile.png)
+![Profile view](screenshots/profile2.png)
+![Alerts view](screenshots/alerts.png)
+![In-App Notifications](screenshots/notifications.png)
+![Email Notifications](screenshots/email_notifications.png)

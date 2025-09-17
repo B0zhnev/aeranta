@@ -35,8 +35,6 @@ Explore Aeranta online:
 
 ## 📸 Screenshots
 
-
-markdown
 ![Map view](screenshots/map.png)
 ![Home Page view](screenshots/homepage.png)
 ![Profile view](screenshots/profile.png)

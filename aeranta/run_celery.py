@@ -3,11 +3,9 @@ import sys
 
 
 def main():
-    # Запуск worker-а
     worker_cmd = [sys.executable, '-m', 'celery', '-A', 'aeranta', 'worker', '-l', 'info']
     worker_proc = subprocess.Popen(worker_cmd)
 
-    # Запуск beat
     beat_cmd = [sys.executable, '-m', 'celery', '-A', 'aeranta', 'beat', '-l', 'info']
     beat_proc = subprocess.Popen(beat_cmd)
 

@@ -32,7 +32,7 @@ class RegisterUserForm(UserCreationForm):
         }
 
     def clean_email(self):
-        email = self.cleaned_data['email']
+        email = self.cleaned_data['email'].lower()
         user = get_user_model()
         if user.objects.filter(email=email).exists():
             raise forms.ValidationError("This Email already exists")
@@ -82,7 +82,7 @@ class EditProfileForm(forms.ModelForm):
         return username
 
     def clean_email(self):
-        email = self.cleaned_data['email']
+        email = self.cleaned_data['email'].lower()
         if self.user and self.user.email != email:
             self.user.email_confirmed = False
         return email
@@ -104,7 +104,7 @@ class ConfirmedEmailPasswordResetForm(PasswordResetForm):
     email = forms.EmailField()
 
     def clean_email(self):
-        email = self.cleaned_data['email']
+        email = self.cleaned_data['email'].lower()
         try:
             user = User.objects.get(email=email)
             if not user.email_confirmed:

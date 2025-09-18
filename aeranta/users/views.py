@@ -115,7 +115,6 @@ class ProfileForecastBlock(ProfileUser):
         return JsonResponse({'html': html})
 
 
-
 class EditProfileView(LoginRequiredMixin, UpdateView):
     model = get_user_model()
     form_class = EditProfileForm

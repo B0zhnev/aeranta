@@ -18,12 +18,9 @@ class LoginUserForm(AuthenticationForm):
         fields = ['username', 'password']
 
     def clean_username(self):
-        username = self.cleaned_data['username'].lower()
-        qs = User.objects.filter(username=username)
-        if self.user:
-            qs = qs.exclude(pk=self.user.pk)
-        if qs.exists():
-            raise forms.ValidationError('This username is already taken.')
+        username = self.cleaned_data.get('username')
+        if username:
+            return username.lower()
         return username
 
 

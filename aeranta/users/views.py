@@ -13,7 +13,6 @@ from weather.models import OpenWeatherApi
 from django.views.decorators.http import require_POST
 
 
-
 class LoginUser(LoginView):
     form_class = LoginUserForm
     template_name = 'users/login.html'

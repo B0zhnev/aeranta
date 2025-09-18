@@ -1,7 +1,9 @@
 from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
 from django.core.exceptions import ValidationError
+from django.views.decorators.debug import sensitive_variables
+
 from .models import User
 from django import forms
 from django.contrib.gis.geos import Point
@@ -14,6 +16,15 @@ class LoginUserForm(AuthenticationForm):
     class Meta:
         model = User
         fields = ['username', 'password']
+
+    def clean_username(self):
+        username = self.cleaned_data['username'].lower()
+        qs = User.objects.filter(username=username)
+        if self.user:
+            qs = qs.exclude(pk=self.user.pk)
+        if qs.exists():
+            raise forms.ValidationError('This username is already taken.')
+        return username
 
 
 class RegisterUserForm(UserCreationForm):
@@ -30,6 +41,15 @@ class RegisterUserForm(UserCreationForm):
         widgets = {
             'email': forms.TextInput(attrs={'class': 'form-input'}),
         }
+
+    def clean_username(self):
+        username = self.cleaned_data['username'].lower()
+        qs = User.objects.filter(username=username)
+        if self.user:
+            qs = qs.exclude(pk=self.user.pk)
+        if qs.exists():
+            raise forms.ValidationError('This username is already taken.')
+        return username
 
     def clean_email(self):
         email = self.cleaned_data['email'].lower()
@@ -73,7 +93,7 @@ class EditProfileForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
     def clean_username(self):
-        username = self.cleaned_data['username']
+        username = self.cleaned_data['username'].lower()
         qs = User.objects.filter(username=username)
         if self.user:
             qs = qs.exclude(pk=self.user.pk)

@@ -214,12 +214,12 @@ class AuroraAlert:
             sunrise_dt = datetime.strptime(f"{local_date_str} {sunrise_str}", "%d.%m.%Y %H:%M")
             sunset_dt = datetime.strptime(f"{local_date_str} {sunset_str}", "%d.%m.%Y %H:%M")
 
-            # Если сейчас после полуночи и до рассвета, ночь началась вчера
+            # Если сейчас после полуночи и до рассвета, то ночь началась вчера
             if now_dt < sunrise_dt:
                 sunset_dt -= timedelta(days=1)
 
-            # Ночь — это от заката до рассвета
-            if not (sunset_dt <= now_dt <= sunrise_dt):
+            # Ночь — это от заката (вчера/сегодня) до рассвета (сегодня)
+            if not (now_dt >= sunset_dt or now_dt <= sunrise_dt):
                 return False
         except Exception:
             return False
@@ -254,9 +254,9 @@ class AuroraAlert:
         elif kp_max >= 4:
             score += 1
 
-        if bz < -5:
+        if bz <= -5:   # включил -5
             score += 2
-        elif -5 <= bz < 0:
+        elif -5 < bz < 0:
             score += 1
 
         if sw_speed > 500:
@@ -270,9 +270,9 @@ class AuroraAlert:
             score += 1
 
         # --- Градация уровней ---
-        if score <= 3:
+        if score < 3:
             return False
-        elif 4 <= score <= 6:
+        elif 3 <= score <= 6:
             chance_text = "Low chance"
         elif 7 <= score <= 9:
             chance_text = "Decent chance"
@@ -287,7 +287,6 @@ class AuroraAlert:
         )
 
         return "Aurora Alert", message, local_date_str, local_time_str
-
 
 
 class LunarAlert:

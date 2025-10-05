@@ -33,7 +33,7 @@ class WindSpeedAlert:
             message = f'Attention! Storm! - {maximum['wind_speed']} m/s (with gusts {maximum['wind_gust']} m/s) starts at {starts} with peak at {maximum['lt']}. Be careful!'
         else:
             message = f'Attention! Hurricane! - {maximum['wind_speed']} m/s (with gusts {maximum['wind_gust']} m/s) starts at {starts} with peak at {maximum['lt']}. Be careful!'
-        return 'WindAlert', message, local_date, local_time
+        return 'Wind Alert', message, local_date, local_time
 
 
 class BabushkaAlert:
@@ -62,7 +62,7 @@ class BabushkaAlert:
             message = f'Darling, atmospheric pressure difference is medium - {difference} hPa. From {first['date']} ({first['pressure']} hPa) to {second['date']} ({second['pressure']} hPa)'
         elif difference >= self.threshold['hard']:
             message = f'Darling, atmospheric pressure difference is high! - {difference} hPa. From {first['date']} ({first['pressure']} hPa) to {second['date']} ({second['pressure']} hPa)'
-        return 'BabushkaAlert', message, local_date, local_time
+        return 'Babushka Alert', message, local_date, local_time
 
 
 class IcyRoadAlert:
@@ -112,7 +112,7 @@ class IcyRoadAlert:
         events_text = ', '.join(event_names).capitalize()
         message = f"{risk}! {events_text} in the next 24 hours, after {time}. Be careful!"
 
-        return 'IceRiskAlert', message, local_date, local_time
+        return 'Ice Risk Alert', message, local_date, local_time
 
 
 class DedushkaAlert:

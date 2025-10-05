@@ -303,27 +303,28 @@ class LunarAlert:
 
         events = []
 
-        phase = moon_data.get('moon_phase', '')
+        phase = moon_data.get('moon_phase', '').lower()
         distance = moon_data.get('moon_distance', 0)
         illumination = moon_data.get('moon_illumination_percentage', 0)
 
-        if phase == 'Full Moon':
-            events.append('Full Moon')
-            if distance < 360000:
-                events.append(f'Super Moon! (distance is {distance} km)')
-            elif distance > 405000:
-                events.append(f'Micro Moon! (distance is {distance} km)')
+        if phase == 'full_moon':
+            events.append('Full')
+            if distance and distance < 360000:
+                events.append(f'and Super Moon')
+            elif distance and distance > 405000:
+                events.append(f'and Micro Moon')
+            else:
+                events.append(f'Moon')
 
-        elif phase == 'New Moon':
+        elif phase == 'new_moon':
             events.append('New Moon')
 
         elif illumination > 95:
-            events.append(f'The Moon is high illuminated - {illumination}%')
+            events.append(f'high illuminated Moon!')
 
         if not events:
             return False
 
-        message = f"Pay attention to the Moon.\n"
-        message += f"Events: {', '.join(events)}.\n"
+        message = f"Check the {' '.join(events)}! It's visible now!"
 
         return "Lunar Alert", message, local_date, local_time

@@ -84,18 +84,15 @@ class IcyRoadAlert:
             humidity = i.get('humidity', 50)
             pop = i.get('pop', 0)
 
-            # Refreezing:
             if temp >= 0 and state is None:
                 state = False
             elif temp < 0 and state == False:
                 state = True
                 events.setdefault('refreezing', []).append(i['local_time'])
 
-            # Freezing rain:
             if 'rain' in i and (temp - 2) < 0 and pop >= 0.3:
                 events.setdefault('freezing_rain', []).append(i['local_time'])
 
-            # Black ice:
             if -20 < (temp - 2) < 0 and humidity >= 75:
                 events.setdefault('black_ice', []).append(i['local_time'])
         
@@ -130,7 +127,6 @@ class DedushkaAlert:
         except AttributeError:
             return False
 
-        # --- Баллы по KP (только текущее значение) ---
         kp = aurora_data.get('kp', 0)
         if kp >= 6:
             kp_score = 3
@@ -141,7 +137,6 @@ class DedushkaAlert:
         else:
             kp_score = 0
 
-        # --- Баллы за Bz (чем отрицательнее, тем хуже) ---
         bz = aurora_data.get('bz', 0)
         if bz < -10:
             bz_score = 3
@@ -152,7 +147,6 @@ class DedushkaAlert:
         else:
             bz_score = 0
 
-        # --- Баллы за скорость солнечного ветра ---
         sw = aurora_data.get('sw_speed', 0)
         if sw >= 600:
             sw_score = 2
@@ -161,7 +155,6 @@ class DedushkaAlert:
         else:
             sw_score = 0
 
-        # --- Баллы за плотность солнечного ветра ---
         density = aurora_data.get('density', 0)
         if density >= 20:
             density_score = 2
@@ -170,14 +163,12 @@ class DedushkaAlert:
         else:
             density_score = 0
 
-        # --- Итоговые баллы ---
         total_score = kp_score + bz_score + sw_score + density_score
         max_score = 10
 
         if total_score < 2:
-            return False  # слишком слабо, чтобы волноваться
+            return False
 
-        # --- Определяем уровень риска ---
         if total_score <= 4:
             level_text = "there might be some small effects"
         elif total_score <= 7:
@@ -207,30 +198,25 @@ class AuroraAlert:
         except AttributeError:
             return False
 
-        # --- Проверка времени: ночь ---
         try:
             local_date = datetime.strptime(local_date_str, "%d.%m.%Y").date()
             now_dt = datetime.strptime(f"{local_date_str} {local_time_str}", "%d.%m.%Y %H:%M")
             sunrise_dt = datetime.strptime(f"{local_date_str} {sunrise_str}", "%d.%m.%Y %H:%M")
             sunset_dt = datetime.strptime(f"{local_date_str} {sunset_str}", "%d.%m.%Y %H:%M")
 
-            # Если сейчас после полуночи и до рассвета, то ночь началась вчера
             if now_dt < sunrise_dt:
                 sunset_dt -= timedelta(days=1)
 
-            # Ночь — это от заката (вчера/сегодня) до рассвета (сегодня)
             if not (now_dt >= sunset_dt or now_dt <= sunrise_dt):
                 return False
         except Exception:
             return False
 
-        # --- Погодные условия ---
-        visibility = weather_data.get('visibility', 10000)  # meters
-        clouds = weather_data.get('clouds', 0)             # percent
+        visibility = weather_data.get('visibility', 10000)
+        clouds = weather_data.get('clouds', 0)
         if visibility < 2000 or clouds > 70:
             return False
 
-        # --- Геомагнитные показатели ---
         kp = aurora_data.get('kp', 0)
         kp1hour = aurora_data.get('kp1hour', 0)
         kp4hour = aurora_data.get('kp4hour', 0)
@@ -296,25 +282,22 @@ class LunarAlert:
     def check(self):
         try:
             moon_data = self.user.ipga.current_data
-            weather_data = self.user.open_weather.forecast_data[0]
             local_date = self.user.open_weather.weather_data['local_date']
             local_time = self.user.open_weather.weather_data['local_time']
-            sunrise = self.user.open_weather.weather_data['sunrise']
-            sunset = self.user.open_weather.weather_data['sunset']
         except AttributeError:
             return False
 
         try:
-            now = datetime.strptime(local_time, "%H:%M").time()
-            sunrise_dt = datetime.strptime(sunrise, "%H:%M").time()
-            sunset_dt = datetime.strptime(sunset, "%H:%M").time()
-            moonrise = datetime.strptime(moon_data.get('moonrise', '00:00'), "%H:%M").time()
-            moonset = datetime.strptime(moon_data.get('moonset', '23:59'), "%H:%M").time()
+            now = datetime.strptime(f'{local_date} {local_time}', "%d.%m.%Y %H:%M").time()
+            moonrise = datetime.strptime(f'{local_date} {moon_data.get('moonrise', '00:00')}', "%d.%m.%Y %H:%M").time()
+            moonset = datetime.strptime(f'{local_date} {moon_data.get('moonset', '23:59')}', "%d.%m.%Y %H:%M").time()
 
-            if not (now < sunrise_dt or now > sunset_dt):
+            if now < moonrise:
+                moonset -= timedelta(days=1)
+
+            if not (now >= moonset or now <= moonrise):
                 return False
-            if not (moonrise <= now <= moonset):
-                return False
+
         except Exception:
             return False
 
@@ -324,37 +307,23 @@ class LunarAlert:
         distance = moon_data.get('moon_distance', 0)
         illumination = moon_data.get('moon_illumination_percentage', 0)
 
-        if phase == "Full Moon":
-            events.append("Full Moon")
+        if phase == 'Full Moon':
+            events.append('Full Moon')
             if distance < 360000:
-                events.append("Super Moon")
+                events.append(f'Super Moon! (distance is {distance} km)')
             elif distance > 405000:
-                events.append("Micro Moon")
-        elif phase == "New Moon":
-            events.append("New Moon")
-            if distance > 405000:
-                events.append("Micro Moon")
+                events.append(f'Micro Moon! (distance is {distance} km)')
 
-        if illumination and illumination > 95:
-            events.append("Lunar High Illumination")
+        elif phase == 'New Moon':
+            events.append('New Moon')
+
+        elif illumination > 95:
+            events.append(f'The Moon is high illuminated - {illumination}%')
 
         if not events:
             return False
 
-        clouds = weather_data.get('clouds', 0)
-        if clouds > 95:
-            return False
-
-        message = f"Whoa! Tonight, pay attention to the Moon.\n"
+        message = f"Pay attention to the Moon.\n"
         message += f"Events: {', '.join(events)}.\n"
-        message += "Properties: "
-        props = []
-        if moon_data.get('moon_altitude') is not None:
-            props.append(f"altitude {moon_data['moon_altitude']}°")
-        if moon_data.get('moon_illumination_percentage') is not None:
-            props.append(f"illumination {moon_data['moon_illumination_percentage']}%")
-        if moon_data.get('moon_distance') is not None:
-            props.append(f"distance {moon_data['moon_distance']} km")
-        message += ', '.join(props) + "."
 
         return "Lunar Alert", message, local_date, local_time

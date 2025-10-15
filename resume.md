@@ -24,7 +24,7 @@ A personal web meteo-station combining weather, forecast, spaceweather, lunar da
 
 ##  Key Achievements
 
-- Designed and implemented the structure of a Django web application using multiple APIs: OpenWeather, Auroras.live, and IPGAstronomy for detailed monitoring of weather and phenomena at user-selected locations.  
+- Designed and implemented the stlsructure of a Django web application using multiple APIs: OpenWeather, Auroras.live, and IPGAstronomy for detailed monitoring of weather and phenomena at user-selected locations.  
 - Created a friendly user interface that even non-technical users can navigate easily.  
 - Set up automation with Celery for background weather checks to power alerts and send email notifications.  
 - Developed a flexible architecture to allow easy integration of new APIs and alerts for future app expansion.  

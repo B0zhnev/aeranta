@@ -107,10 +107,10 @@ class IcyRoadAlert:
             risk = 'Watch out'
 
         event_names = [k.replace('_', ' ') for k in events.keys()]
-        all_times = [t for times in events.values() for t in times]
-        time = sorted(all_times)[0]
+        # all_times = [t for times in events.values() for t in times]
+        # time = sorted(all_times)[0]
         events_text = ', '.join(event_names).capitalize()
-        message = f"{risk}! {events_text} in the next 24 hours, after {time}. Be careful!"
+        message = f'{risk}! {events_text} in the next 24 hours. Be careful!'
 
         return 'Ice Risk Alert', message, local_date, local_time
 

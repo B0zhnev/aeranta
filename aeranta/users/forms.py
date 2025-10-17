@@ -10,7 +10,7 @@ from django.contrib.gis.geos import Point
 
 
 class LoginUserForm(AuthenticationForm):
-    username = forms.CharField(label='Login', widget=forms.TextInput(attrs={'class': 'form-input'}))
+    username = forms.CharField(label='Username or Email', widget=forms.TextInput(attrs={'class': 'form-input'}))
     password = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
 
     class Meta:
@@ -25,11 +25,11 @@ class LoginUserForm(AuthenticationForm):
 
 
 class RegisterUserForm(UserCreationForm):
-    username = forms.CharField(label="Login", widget=forms.TextInput(attrs={'class': 'form-input'}))
+    username = forms.CharField(label='Username', widget=forms.TextInput(attrs={'class': 'form-input'}))
     latitude = forms.FloatField(widget=forms.HiddenInput())
     longitude = forms.FloatField(widget=forms.HiddenInput())
-    password1 = forms.CharField(label="Password", widget=forms.PasswordInput(attrs={'class': 'form-input'}))
-    password2 = forms.CharField(label="Repeat Password", widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+    password1 = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+    password2 = forms.CharField(label='Repeat Password', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
 
     class Meta:
         model = get_user_model()
@@ -52,7 +52,7 @@ class RegisterUserForm(UserCreationForm):
         email = self.cleaned_data['email'].lower()
         user = get_user_model()
         if user.objects.filter(email=email).exists():
-            raise forms.ValidationError("This Email already exists")
+            raise forms.ValidationError('This Email already exists')
         return email
 
     def save(self, commit=True):

@@ -22,9 +22,11 @@ def weather_at_point(request):
     data = {'current': current, 'forecast': forecast}
     return JsonResponse(data)
 
+
 @never_cache
 def show_contacts(request):
     return render(request, 'weather/visit.html')
+
 
 @never_cache
 def demo(request):

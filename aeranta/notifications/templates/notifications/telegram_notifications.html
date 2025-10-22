@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Telegram Notifications{% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="max-width: 640px;">
+  <div class="p-4 rounded shadow-sm" style="background-color: #f8f9fa; border-radius: 12px;">
+    <h4 class="mb-4 text-center">Telegram Notifications</h4>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} mt-2">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    <div class="text-center mb-4">
+      <p class="text-muted">
+        Subscribe to real-time notifications via Telegram.
+        Click the button below or scan the QR code to connect your account.
+      </p>
+    </div>
+
+    <div class="text-center mb-4">
+      <div class="d-flex justify-content-center mb-3">
+        {% load qr_code %}
+        {% qr_from_text link size="8" %}
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- Navigation and main actions -->
+    <div class="d-flex justify-content-between mt-4">
+      <a href="{% url 'notifications:list' %}"
+         class="btn btn-outline-secondary"
+         style="border-radius:0.5rem;">Back</a>
+
+      <div class="d-flex gap-2">
+        <a href="{% url 'notifications:telegram_unsubscribe' %}"
+           class="btn btn-outline-danger"
+           style="border-radius:0.5rem;">
+          Unsubscribe
+        </a>
+        <a href="{{ link }}" target="_blank"
+           class="btn btn-secondary"
+           style="border-radius:0.5rem;">
+          Connect
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

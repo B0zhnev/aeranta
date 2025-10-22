@@ -1,61 +1,64 @@
-
 {% extends 'base.html' %}
 
 {% block title %}Notifications{% endblock %}
 
 {% block content %}
-  <div class="container mt-3">
+<div class="container mt-3">
     <h3>Notifications</h3>
 
-    <div class="mb-2 d-flex justify-content-between">
-      <div>
-        {% if notifications and has_unread %}
-          <form method="post" action="{% url 'notifications:mark_all_read' %}" style="display:inline;">
-            {% csrf_token %}
-            <input type="hidden" name="next" value="{{ request.get_full_path }}">
-            <button class="btn btn-sm btn-outline-secondary" type="submit">Mark all read</button>
-          </form>
-        {% endif %}
-      </div>
-      <div>
-        <a href="{% url 'notifications:edit_email_notifications' %}"
-           class="btn btn-sm btn-outline-secondary">
-          Email Notifications
-        </a>
-      </div>
-    </div>
-    {% if notifications %}
-      <ul class="list-group">
-        {% for item in notifications %}
-          {% with n=item.notification %}
-            <li class="list-group-item d-flex justify-content-between align-items-start {% if not n.is_read %}fw-bold{% endif %}"
-                style="{% if n.is_read %}opacity: {{ item.opacity }};{% endif %}">
-              <div>
-                <div><strong>{{ n.sender }}</strong></div>
-                <div class="small text-muted">{{ n.local_date }} {{ n.local_time }}</div>
-                <div>{{ n.message }}</div>
-              </div>
-
-              <div>
-                {% if not n.is_read %}
-                  <form method="post" action="{% url 'notifications:mark_read' n.pk %}">
+    <div class="mb-2 d-flex justify-content-between align-items-center">
+        <div>
+            {% if notifications and has_unread %}
+                <form method="post" action="{% url 'notifications:mark_all_read' %}" style="display:inline;">
                     {% csrf_token %}
                     <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                    <button class="btn btn-secondary btn-sm" type="submit" >Read</button>
-                  </form>
-                {% endif %}
-              </div>
-            </li>
-          {% endwith %}
-        {% endfor %}
-      </ul>
+                    <button class="btn btn-sm btn-outline-secondary" type="submit">Mark all read</button>
+                </form>
+            {% endif %}
+        </div>
+
+        <div class="d-flex">
+            <a href="{% url 'notifications:edit_email_notifications' %}" class="btn btn-sm btn-outline-secondary">
+                Email
+            </a>
+            <a href="{% url 'notifications:telegram_notifications' %}" class="btn btn-sm btn-outline-secondary ms-2">
+                Telegram
+            </a>
+        </div>
+    </div>
+
+    {% if notifications %}
+        <ul class="list-group">
+            {% for item in notifications %}
+                {% with n=item.notification %}
+                    <li class="list-group-item d-flex justify-content-between align-items-start {% if not n.is_read %}fw-bold{% endif %}"
+                        style="{% if n.is_read %}opacity: {{ item.opacity }};{% endif %}">
+                        <div>
+                            <div><strong>{{ n.sender }}</strong></div>
+                            <div class="small text-muted">{{ n.local_date }} {{ n.local_time }}</div>
+                            <div>{{ n.message }}</div>
+                        </div>
+
+                        <div>
+                            {% if not n.is_read %}
+                                <form method="post" action="{% url 'notifications:mark_read' n.pk %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                    <button class="btn btn-secondary btn-sm" type="submit">Read</button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% endwith %}
+            {% endfor %}
+        </ul>
     {% else %}
-    <div class="card mt-3">
-    <div class="card-body">
-        <p>Here you will see notifications from the alerts you subscribed to</p>
-      <a href="{% url 'alerts:list' %}" class="btn btn-outline-secondary">Subscribe to alerts</a>
+        <div class="card mt-3">
+            <div class="card-body">
+                <p>Here you will see notifications from the alerts you subscribed to</p>
+                <a href="{% url 'alerts:list' %}" class="btn btn-outline-secondary">Subscribe to alerts</a>
+            </div>
+        </div>
     {% endif %}
-  </div>
-  </div>
-  </div>
+</div>
 {% endblock %}

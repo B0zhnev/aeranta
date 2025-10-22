@@ -10,4 +10,6 @@ urlpatterns = [
      path('mark-read/<int:pk>/', views.MarkReadView.as_view(), name='mark_read'),
      path('mark-all-read/', views.AllMarkReadView.as_view(), name='mark_all_read'),
      path('email-notifications/', views.edit_email_notifications, name='edit_email_notifications'),
+     path('telegram-notifications/', views.telegram_notifications, name='telegram_notifications'),
+     path('telegram-unsubscribe/', views.telegram_unsubscribe, name='telegram_unsubscribe'),
 ]

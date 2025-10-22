@@ -1,9 +1,12 @@
+from django.contrib.auth import get_user_model
 from django.template.loader import render_to_string
-from users.models import User
 from .models import Notification
 from django.utils import timezone
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
+from telegram_bot.utils import send_telegram_message
+
+User = get_user_model()
 
 
 def send_notification(user, message, sender, local_date, local_time):
@@ -20,6 +23,8 @@ def send_notification(user, message, sender, local_date, local_time):
         local_date=local_date,
         local_time=local_time
     )
+    telegram_message = f'{sender}: {message}'
+    send_telegram_message(user, telegram_message)
 
 
 def update_email_nots_from_weather(user, user_selected_hour):

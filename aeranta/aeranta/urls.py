@@ -29,6 +29,7 @@ urlpatterns = [
     path('privacy/', TemplateView.as_view(template_name='privacy.html'), name='privacy'),
     path('terms/', TemplateView.as_view(template_name='terms.html'), name='terms'),
     path('cookies/', TemplateView.as_view(template_name='cookies.html'), name='cookies'),
+    path('telegram_bot/', include('telegram_bot.urls')),
 ]
 
 if settings.DEBUG:

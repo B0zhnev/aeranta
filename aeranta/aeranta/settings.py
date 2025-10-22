@@ -50,7 +50,9 @@ INSTALLED_APPS = [
     'django_extensions',
     'django.contrib.sites',
     'django.contrib.sitemaps',
-    'django_celery_beat'
+    'django_celery_beat',
+    'telegram_bot',
+    'qr_code'
 ]
 
 MIDDLEWARE = [
@@ -191,3 +193,5 @@ CSRF_TRUSTED_ORIGINS = env('CSRF_TRUSTED_ORIGINS').split(' ')
 
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
+
+TELEGRAM_BOT_TOKEN = env('TELEGRAM_BOT_TOKEN')

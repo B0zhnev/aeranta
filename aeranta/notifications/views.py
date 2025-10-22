@@ -5,10 +5,14 @@ from django.views import View
 from django.views.generic import ListView
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from telegram_bot.services import unsubscribe_user
 from .forms import EmailNotificationForm
 from .services import update_email_nots_from_weather
 from notifications.models import Notification
 from django.views.decorators.cache import never_cache
+from telegram_bot.utils import generate_telegram_token
+
 
 class NotificationListView(LoginRequiredMixin, ListView):
     model = Notification
@@ -55,6 +59,7 @@ class AllMarkReadView(LoginRequiredMixin, View):
         next_url = request.POST.get('next') or request.Meta.get('HTTP_REFERER') or reverse('notifications:list')
         return redirect(next_url)
 
+
 @never_cache
 @login_required
 def edit_email_notifications(request):
@@ -85,3 +90,19 @@ def edit_email_notifications(request):
     
     return render(request, 'notifications/edit_email_notifications.html', context=data)
 
+
+def telegram_notifications(request):
+    username = request.user.username
+    link = f'https://t.me/AerantaBot?start={generate_telegram_token(username)}'
+    return render(request, 'notifications/telegram_notifications.html', {'link':link})
+
+
+@login_required
+def telegram_unsubscribe(request):
+    success = unsubscribe_user(request.user.username)
+    if success:
+        messages.success(request, 'You have successfully unsubscribed from Telegram notifications.')
+    else:
+        messages.warning(request, 'No active Telegram subscription found.')
+
+    return redirect('notifications:telegram_notifications')

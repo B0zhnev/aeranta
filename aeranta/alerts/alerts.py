@@ -325,6 +325,9 @@ class LunarAlert:
         if not events:
             return False
 
-        message = f"Check the {' '.join(events)}! It's visible now!"
+        if phase == 'new_moon':
+            message = f"New Moon phase — invisible from Earth."
+        else:
+            message = f"Check the {' '.join(events)}! It's visible now!"
 
         return "Lunar Alert", message, local_date, local_time

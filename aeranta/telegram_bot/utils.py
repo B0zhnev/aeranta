@@ -1,7 +1,6 @@
 import base64
 import hmac
 import hashlib
-import json
 from django.conf import settings
 from telegram import Bot
 from telegram.error import TelegramError
@@ -11,54 +10,31 @@ import asyncio
 bot = Bot(token=settings.TELEGRAM_BOT_TOKEN)
 
 
-def encode_payload(payload_dict):
-    """Кодирует словарь в безопасный base64"""
-    json_bytes = json.dumps(payload_dict, separators=(',', ':')).encode()
-    return base64.urlsafe_b64encode(json_bytes).decode()
-
-
-def decode_payload(encoded_payload):
-    """Декодирует base64 обратно в словарь"""
+def decode_telegram_token(token):
     try:
-        json_bytes = base64.urlsafe_b64decode(encoded_payload.encode())
-        return json.loads(json_bytes)
+        decoded = base64.urlsafe_b64decode(token.encode())
+        username_bytes, signature = decoded.rsplit(b'.', 1)
+        username = username_bytes.decode()
+
+        expected_signature = hmac.new(
+            settings.SECRET_KEY.encode(),
+            username_bytes,
+            hashlib.sha256
+        ).digest()
+
+        if hmac.compare_digest(signature, expected_signature):
+            return username
+        return None
     except Exception:
         return None
 
 
 def generate_telegram_token(username):
-    """Генерирует токен для username любого вида"""
-    payload = {'username': username}
-    payload_b64 = encode_payload(payload)
-
-    signature = hmac.new(
-        settings.SECRET_KEY.encode(),
-        payload_b64.encode(),
-        hashlib.sha256
-    ).digest()
-    signature_b64 = base64.urlsafe_b64encode(signature).decode()
-
-    return f"{payload_b64}.{signature_b64}"
-
-
-def decode_telegram_token(token):
-    """Декодирует токен и проверяет подпись"""
-    try:
-        payload_b64, signature_b64 = token.rsplit('.', 1)
-        payload = decode_payload(payload_b64)
-        if not payload or 'username' not in payload:
-            return None
-
-        expected_signature = hmac.new(
-            settings.SECRET_KEY.encode(),
-            payload_b64.encode(),
-            hashlib.sha256
-        ).digest()
-        if hmac.compare_digest(base64.urlsafe_b64decode(signature_b64.encode()), expected_signature):
-            return payload['username']
-        return None
-    except Exception:
-        return None
+    secret = settings.SECRET_KEY.encode()
+    username_bytes = username.encode()
+    signature = hmac.new(secret, username_bytes, hashlib.sha256).digest()
+    token = base64.urlsafe_b64encode(username_bytes + b"." + signature).decode()
+    return token
 
 
 def send_telegram_message(user, message):
@@ -74,5 +50,4 @@ def send_telegram_message(user, message):
         except TelegramError as e:
             print(f'TelegramError: {e}')
             return False
-
     return asyncio.run(_send())

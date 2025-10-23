@@ -5,7 +5,6 @@ from django.conf import settings
 from telegram import Bot
 from telegram.error import TelegramError
 from .models import TelegramProfile
-import asyncio
 
 bot = Bot(token=settings.TELEGRAM_BOT_TOKEN)
 
@@ -43,11 +42,9 @@ def send_telegram_message(user, message):
     except TelegramProfile.DoesNotExist:
         return False
 
-    async def _send():
-        try:
-            await bot.send_message(chat_id=profile.chat_id, text=message)
-            return True
-        except TelegramError as e:
-            print(f'TelegramError: {e}')
-            return False
-    return asyncio.run(_send())
+    try:
+        bot.send_message(chat_id=profile.chat_id, text=message)
+        return True
+    except TelegramError as e:
+        print(f'TelegramError: {e}')
+        return False

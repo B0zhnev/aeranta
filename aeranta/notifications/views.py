@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
@@ -93,7 +94,7 @@ def edit_email_notifications(request):
 
 def telegram_notifications(request):
     username = request.user.username
-    link = f'https://t.me/AerantaBot?start={generate_telegram_token(username)}'
+    link = f'https://t.me/{settings.BOT_NAME}?start={generate_telegram_token(username)}'
     return render(request, 'notifications/telegram_notifications.html', {'link':link})
 
 

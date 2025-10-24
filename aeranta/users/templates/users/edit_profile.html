@@ -13,7 +13,15 @@
         <div class="alert alert-{{ message.tags }} mt-2">{{ message }}</div>
       {% endfor %}
     {% endif %}
-
+    <div>
+        <a href="{% url 'notifications:edit_email_notifications' %}" class="btn btn-outline-dark btn-sm">
+                Email Notifications
+            </a>
+            <a href="{% url 'notifications:telegram_notifications' %}" class="btn btn-outline-dark btn-sm">
+                Telegram Subscription
+            </a>
+      </div>
+    <hr>
     <form method="post" novalidate>
       {% csrf_token %}
 
@@ -42,7 +50,12 @@
           <div class="form-text text-muted mt-1">Your email is not confirmed. After changing email you'll need to confirm it.</div>
         {% endif %}
       </div>
-
+      <label for="{{ form.email.id_for_label }}" class="form-label">Password</label>
+      <p>
+      <a href="{% url 'users:password_reset' %}" class="btn btn-outline-secondary btn-sm">
+            Change password
+          </a>
+      </p>
       <div class="row">
         <div class="col-md-6 mb-3">
           <label for="{{ form.first_name.id_for_label }}" class="form-label">First name</label>
@@ -81,14 +94,11 @@
         <div id="preview" class="mt-2 px-2 small text-muted"></div>
       </div>
       <div class="d-flex justify-content-between align-items-center mt-3">
-        <button type="submit" class="btn btn-secondary" style="border-radius:0.5rem;">Save</button>
-        <div>
-          <a href="{% url 'users:password_reset' %}" class="btn btn-outline-secondary" style="border-radius:0.5rem;">
-            Change password
-          </a>
-          <a href="{% url 'users:profile' %}" class="btn btn-outline-secondary ms-2" style="border-radius:0.5rem;">
+        <a href="{% url 'users:profile' %}" class="btn btn-outline-secondary ms-2" style="border-radius:0.5rem;">
             Cancel
-          </a>
+        </a>
+        <div class="d-flex">
+          <button type="submit" class="btn btn-secondary" style="border-radius:0.5rem;">Save</button>
         </div>
       </div>
     </form>

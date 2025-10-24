@@ -123,7 +123,7 @@
               {{ user.username }}
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
-              <li><a class="dropdown-item" href="{% url 'users:profile' %}">profile</a></li>
+              <li><a class="dropdown-item" href="{% url 'users:profile' %}">station</a></li>
               <li><a class="dropdown-item" href="{% url 'users:edit_profile' %}">edit profile</a></li>
               <li>
                 <form method="post" action="{% url 'users:logout' %}">

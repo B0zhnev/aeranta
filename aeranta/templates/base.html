@@ -28,47 +28,35 @@
       padding-left: 20px;
     }
 
-    .navbar .badge-notify {
-      position: absolute;
-      top: 6px;
-      right: 6px;
-      transform: translate(0, 0);
-      min-width: 20px;
-      height: 20px;
-      padding: 0 6px;
-      font-size: 0.65rem;
-      line-height: 20px;
-      display: inline-block;
-      text-align: center;
-      border-radius: 999px;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.25);
-    }
-
-
-    @media (max-width: 991.98px) { 
-        body {
+    /* 📱 Мобильная адаптация */
+    @media (max-width: 991.98px) {
+      body {
         padding-top: 100px;
-    }
-    .navbar .nav-link {
+      }
+
+      .navbar .nav-link {
         font-size: 1.5rem;
         padding: 1rem 1.2rem;
-    }
-    .navbar .navbar-toggler {
+      }
+      .navbar .navbar-toggler {
         padding: 1rem;
-    }
-    .navbar .navbar-toggler-icon {
-        width: 2.5rem;
-        height: 2.5rem;
-    }
+      }
+      .navbar .navbar-toggler-icon {
+        width: 3.2rem;
+        height: 3.2rem;
+      }
 
-    .navbar .dropdown-menu {
+      .navbar .dropdown-menu {
         font-size: 1.3rem;
         padding: 0.6rem 0;
-    }
-    .navbar .dropdown-item {
+      }
+      .navbar .dropdown-item {
         padding: 0.6rem 1.5rem;
+      }
+      .navbar-brand img {
+        height: 72px !important;
+      }
     }
-}
   </style>
 </head>
 <body>
@@ -80,8 +68,7 @@
     <div class="container-fluid">
       <a class="navbar-brand d-flex align-items-center" href="/">
         <span class="d-none d-sm-inline" style="margin-right:0.8rem">Aeranta</span>
-  <img src="/media/main/logo.png" alt="Aeranta logo" height="40" class="me-2">
-
+        <img src="/media/main/logo.png" alt="Aeranta logo" height="40" class="me-2">
       </a>
 
       <!-- Бургер -->
@@ -95,8 +82,8 @@
         <ul class="navbar-nav ms-auto">
 
           {% if user.is_authenticated %}
-          <li class="nav-item">
-            <a class="nav-link position-relative" href="{% url 'notifications:list' %}" aria-label="Notifications" title="Notifications">
+          <li class="nav-item position-relative">
+            <a class="nav-link" href="{% url 'notifications:list' %}" aria-label="Notifications" title="Notifications">
               <!-- inline SVG bell -->
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                    class="bi bi-bell" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
@@ -147,16 +134,14 @@
     {% endblock %}
   </main>
 
-
   <div class="container" style="margin:10rem auto auto auto">
-    <p  style="text-align:center; opacity:0.5">
+    <p style="text-align:center; opacity:0.5">
     {% if not user.is_authenticated %}
       Without registration, Aeranta is just an interactive weather map —
     <a class="text-muted" href="{% url 'users:register' %}">sign up</a> to unlock more features.
     {% endif %}
     </p>
   </div>
-
 
   <footer class="text-center mt-5 py-3 border-top text-muted small">
     © 2025 Aeranta ·
@@ -166,10 +151,8 @@
     <a href="{% url 'contacts' %}" class="text-decoration-none text-muted">Contacts</a>
   </footer>
 
-    <p class="text-muted" style="text-align:center; opacity:0.5">
-      Aeranta version: 1.3
-    </p>
-
-
+  <p class="text-muted" style="text-align:center; opacity:0.5">
+    Aeranta version: 1.3
+  </p>
 </body>
 </html>

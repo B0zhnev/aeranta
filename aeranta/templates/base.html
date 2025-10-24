@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>{% block title %}Aeranta{% endblock %}</title>
+  <link rel="icon" type="image/jpeg" href="/media/main/logo.png">
 
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -27,7 +28,6 @@
       padding-left: 20px;
     }
 
-    /* маленький стиль для бейджа — позиционируем поверх иконки */
     .navbar .badge-notify {
       position: absolute;
       top: 6px;
@@ -47,26 +47,26 @@
 
     @media (max-width: 991.98px) { 
         body {
-        padding-top: 100px; /* увеличенный отступ, подгон под высоту navbar */
+        padding-top: 100px;
     }
     .navbar .nav-link {
-        font-size: 1.5rem;      /* увеличиваем шрифт */
-        padding: 1rem 1.2rem;   /* больше отступы для пальцев */
+        font-size: 1.5rem;
+        padding: 1rem 1.2rem;
     }
     .navbar .navbar-toggler {
-        padding: 1rem;          /* увеличенная кнопка бургер */
+        padding: 1rem;
     }
     .navbar .navbar-toggler-icon {
         width: 2.5rem;
         height: 2.5rem;
     }
-    /* dropdown menu увеличиваем */
+
     .navbar .dropdown-menu {
-        font-size: 1.3rem;      /* больше шрифт */
+        font-size: 1.3rem;
         padding: 0.6rem 0;
     }
     .navbar .dropdown-item {
-        padding: 0.6rem 1.5rem; /* увеличенные кликабельные зоны */
+        padding: 0.6rem 1.5rem;
     }
 }
   </style>
@@ -78,7 +78,11 @@
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
     <div class="container-fluid">
-      <a class="navbar-brand" href="/">Aeranta</a>
+      <a class="navbar-brand d-flex align-items-center" href="/">
+        <span class="d-none d-sm-inline" style="margin-right:0.8rem">Aeranta</span>
+  <img src="/media/main/logo.png" alt="Aeranta logo" height="40" class="me-2">
+
+      </a>
 
       <!-- Бургер -->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"

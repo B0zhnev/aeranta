@@ -130,7 +130,7 @@ def get_weather_data(lat, lon):
 
 
 def to_local_time(dt, timezone):
-    local_dt = datetime.fromtimestamp(dt - 10800) + timedelta(seconds=timezone)
+    local_dt = datetime.fromtimestamp(dt - 7200) + timedelta(seconds=timezone)
     localdate = local_dt.strftime('%d.%m.%Y')
     localtime = local_dt.strftime('%H:%M')
     return localdate, localtime

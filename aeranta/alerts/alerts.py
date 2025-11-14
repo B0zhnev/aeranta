@@ -128,6 +128,14 @@ class DedushkaAlert:
             return False
 
         kp = aurora_data.get('kp', 0)
+
+        if kp >= 9:
+            g_grade = 'G5.0'
+        elif kp <= 5:
+            g_grade = ''
+        else:
+            g_grade = f'G{kp - 4}'
+
         if kp >= 6:
             kp_score = 3
         elif kp >= 4:
@@ -177,9 +185,13 @@ class DedushkaAlert:
             level_text = "beware! Strong effects might be felt"
 
         message = (
-            f"My dear, {level_text} due to geomagnetic activity. "
-            f"My estimate of the risk is {total_score}/{max_score}, take care!"
+            f'My dear, {level_text} due to geomagnetic activity. '
+            f'My estimate of the risk is {total_score} out of {max_score}, take care!'
         )
+
+        if g_grade:
+            message += f' Geomagnetic storm level: {g_grade}'
+
         return "Dedushka Alert", message, local_date, local_time
         
         

@@ -13,7 +13,7 @@ Currently looking for opportunities as a Junior Python / Backend Developer to gr
 - **Frameworks:** Django  
 - **Databases:** PostgreSQL, Redis  
 - **DevOps:** Docker
-- **APIs:** OpenWeather, Auroras.live, IPGAstronomy  
+- **APIs:** Telegram Bot, OpenWeather, Auroras.live, IPGAstronomy  
 - **Libraries / Tools:** Git, Celery, Nginx, OpenLayers, Leaflet 
 
 ##  Project Experience

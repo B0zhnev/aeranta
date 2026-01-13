@@ -5,24 +5,27 @@
 ---
 
 ## ✨ Features
-- **Alert system** – subscribe to notifications about geomagnetic storms, atmospheric pressure changes, auroras, lunar alerts, wind, and ice risks. Alerts are delivered both in-app and via email.  
-- **Customizable alert subscriptions** – extend user profile with extra data blocks (e.g. Space Weather, Lunar Conditions).  
-- **Minimalist interface** – intuitive UI, designed for accessibility and simplicity.  
+- **Alert system** – subscribe to notifications about geomagnetic storms, atmospheric pressure changes, auroras, lunar alerts, wind, and ice risks.  
+  Alerts are delivered instantly via Telegram, with an optional daily email digest.
+- **Customizable alert subscriptions** – extend user profile with extra data blocks (e.g. Space Weather, Lunar Conditions).
+- **Minimalist interface** – intuitive UI, designed for accessibility and simplicity.
 - **Interactive map**:
-  - without registration: quick weather overview for any point;  
-  - with registration: set exact coordinates in the profile.  
-- **Extensibility** – easy integration of new APIs and alert types.  
+  - without registration: quick weather overview for any point.
+  - with registration: personal weather station with detailed information.
+- **Extensibility** – easy integration of new APIs and alert types.
 
 ---
 
 ## 🛠 Tech stack
-- **Backend**: Python, Django  
-- **Task queue**: Celery + Redis  
-- **Frontend**: OpenLayers, custom JavaScript, HTML/CSS  
-- **Database**: PostgreSQL + PostGIS  
-- **APIs**: OpenWeather API, Auroras.live API, IPG Astronomy API  
-- **Infrastructure**: Docker, Docker Compose, Nginx  
-- **Notifications**: Email via SMTP  
+- **Backend**: Python, Django
+- **Task queue**: Celery + Redis
+- **Frontend**: OpenLayers, JS, HTML/CSS
+- **Database**: PostgreSQL + PostGIS
+- **APIs**: Telegram Bot, OpenWeather, Auroras.live, IPG Astronomy
+- **Infrastructure**: Docker, Docker Compose, Nginx
+
+
+---
 
 ---
 
@@ -41,4 +44,5 @@ Explore Aeranta online:
 ![Profile view](screenshots/profile2.png)
 ![Alerts view](screenshots/alerts.png)
 ![In-App Notifications](screenshots/notifications.png)
+![Telegram Notifications](screenshots/telegram.jpg)
 ![Email Notifications](screenshots/email_notifications.png)

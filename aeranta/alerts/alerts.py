@@ -190,7 +190,7 @@ class DedushkaAlert:
         )
 
         if g_grade:
-            message += f' Geomagnetic storm level: {g_grade}'
+            message += f'Geomagnetic storm level: {g_grade}'
 
         return "Dedushka Alert", message, local_date, local_time
         

@@ -12,6 +12,7 @@ ALERT_CLASSES = {
     'lunar': LunarAlert
 }
 
+
 def run_alert_for_user(user, alert_slug):
     alert_obj = ALERT_CLASSES.get(alert_slug)
     if not alert_obj:

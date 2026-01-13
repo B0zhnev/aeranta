@@ -2,6 +2,7 @@
 **Junior Python Developer**
 
 **Контакты:**  
+- Telegram: @evgenbzn
 - Email: bozhnev.work@gmail.com  
 - GitHub: [github.com/B0zhnev](https://github.com/B0zhnev)  
 - LinkedIn: [linkedin.com/in/bozhnev](https://www.linkedin.com/in/bozhnev)  

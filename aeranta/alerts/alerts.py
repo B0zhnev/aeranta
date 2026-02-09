@@ -90,10 +90,10 @@ class IcyRoadAlert:
                 state = True
                 events.setdefault('refreezing', []).append(i['local_time'])
 
-            if 'rain' in i and (temp - 2) < 0 and pop >= 0.3:
+            if 'rain' in i and temp <= 0 and pop >= 0.3:
                 events.setdefault('freezing_rain', []).append(i['local_time'])
 
-            if -20 < (temp - 2) < 0 and humidity >= 75:
+            if -2 < temp <= 0 and humidity >= 90:
                 events.setdefault('black_ice', []).append(i['local_time'])
         
         if not events:
